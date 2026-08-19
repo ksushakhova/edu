@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Итоги обучения R&D — рассказ команды</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/manrope@5.1.0/500.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/manrope@5.1.0/700.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/manrope@5.1.0/800.css">
+<style>
+  :root{
+    --bg:#EBEBEB;
+    --ink:#101010;
+    --muted:#6d6d6d;
+    --green:#3D9A44;
+    --green-soft:rgba(61,154,68,.12);
+    --lime:#7ED957;
+    --orange:#F2A93B;
+    --red:#E2572B;
+    --blue:#4D9DE0;
+    --card:#ffffff;
+    --radius:24px;
+    --shadow:0 12px 32px rgba(0,0,0,.07);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Manrope',system-ui,sans-serif;
+    font-weight:500;
+    line-height:1.55;
+    overflow-x:hidden;
+  }
+  .wrap{max-width:1140px;margin:0 auto;padding:0 24px}
+
+  /* ---------- progress bar ---------- */
+  #progress{position:fixed;top:0;left:0;height:5px;width:0;z-index:99;
+    background:linear-gradient(90deg,var(--green),var(--lime),var(--orange),var(--red));}
+
+  /* ---------- top bar ---------- */
+  .top{position:sticky;top:0;z-index:50;background:rgba(235,235,235,.85);backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(0,0,0,.05)}
+  .top-in{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 24px;max-width:1140px;margin:0 auto}
+  .logo{font-weight:800;font-size:15px;letter-spacing:.02em}
+  .logo b{color:var(--green)}
+  .top-note{font-size:12.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;white-space:nowrap}
+
+  /* ---------- hero ---------- */
+  .hero{padding:72px 0 26px;text-align:center}
+  .hero h1{font-weight:800;text-transform:uppercase;letter-spacing:-.015em;line-height:.98;
+    font-size:clamp(40px,7vw,82px)}
+  .hero h1 .green{color:var(--green)}
+  .hero-sub{margin:22px auto 0;font-size:clamp(15px,1.7vw,18px);color:#333;max-width:640px}
+  .hero-sub b{color:var(--green)}
+  .hero-emojis{display:flex;justify-content:center;gap:18px;margin-top:26px;font-size:42px}
+  .hero-emojis span{display:inline-block;animation:float 4s ease-in-out infinite}
+  .hero-emojis span:nth-child(2){animation-delay:1.2s}
+  .hero-emojis span:nth-child(3){animation-delay:2.2s}
+  @keyframes float{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-12px) rotate(6deg)}}
+
+  /* ---------- stats ---------- */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:38px 0 10px}
+  .stat{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 22px 18px;
+    position:relative;overflow:hidden;transition:transform .35s ease}
+  .stat:hover{transform:translateY(-5px)}
+  .stat .em{font-size:30px}
+  .stat .num{font-weight:800;font-size:clamp(32px,3.6vw,46px);letter-spacing:-.02em;line-height:1.1}
+  .stat .lbl{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+  .stat::after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;
+    background:linear-gradient(90deg,var(--green),var(--lime),var(--orange))}
+  .csi-note{font-size:13px;color:var(--muted);margin:10px 4px 0;text-align:right}
+  .csi-note b{color:var(--green)}
+
+  /* ---------- sections ---------- */
+  section{padding:64px 0 8px}
+  .sec-head{display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:8px}
+  .sec-num{font-weight:800;font-size:15px;color:#fff;background:var(--green);border-radius:999px;padding:6px 14px;letter-spacing:.1em}
+  .sec-head h2{font-weight:800;text-transform:uppercase;letter-spacing:-.01em;line-height:1.05;
+    font-size:clamp(26px,4vw,44px)}
+  .sec-head h2 .green{color:var(--green)}
+  .sec-lead{margin:10px 0 26px;font-size:clamp(15px,1.5vw,17px);color:#333;max-width:760px}
+  .sec-lead b{color:var(--green)}
+
+  /* ribbon divider */
+  .ribbon{display:block;width:100%;height:70px;margin:6px 0 0}
+
+  /* ---------- cards ---------- */
+  .grid{display:grid;gap:16px}
+  .g-open{grid-template-columns:repeat(4,1fr)}
+  .g-serv{grid-template-columns:repeat(3,1fr)}
+  .g-2{grid-template-columns:repeat(2,1fr)}
+  .g-3{grid-template-columns:repeat(3,1fr)}
+  .g-courses{grid-template-columns:repeat(3,1fr)}
+  .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;
+    transition:transform .35s ease,box-shadow .35s ease;display:flex;flex-direction:column;gap:10px}
+  .card:hover{transform:translateY(-6px);box-shadow:0 20px 44px rgba(0,0,0,.11)}
+  .card .em{font-size:30px;line-height:1}
+  .card h3{font-size:15.5px;font-weight:800;line-height:1.3}
+  .card .sub{font-size:12.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+
+  .pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+  .pill{border-radius:999px;padding:4px 11px;font-size:12.5px;font-weight:800;white-space:nowrap}
+  .ppl{background:#efefef;color:#333}
+  .csi{background:var(--green-soft);color:#2e8a39}
+  .csi.na{background:#efefef;color:#9a9a9a}
+
+  .bar{height:6px;border-radius:999px;background:#ececec;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;border-radius:999px;
+    background:linear-gradient(90deg,var(--green),var(--lime) 55%,var(--orange));
+    transition:width 1.1s cubic-bezier(.25,.8,.3,1) .25s}
+  .vis .bar i{width:var(--w)}
+
+  /* event rows inside cards */
+  .evt{padding:10px 0;border-top:1px dashed #e2e2e2}
+  .evt:first-of-type{border-top:none;padding-top:2px}
+  .evt-name{font-size:13.5px;font-weight:700;line-height:1.35;display:block;margin-bottom:7px}
+  .evt .pills{margin-top:0}
+  .evt .bar{margin-top:7px}
+
+  .serv-head{display:flex;align-items:center;gap:10px}
+  .serv-head .em{font-size:26px}
+  .serv-head h3{font-size:17px}
+  .serv-badge{margin-left:auto;font-size:12px;font-weight:800;color:var(--green);background:var(--green-soft);
+    border-radius:999px;padding:4px 10px;white-space:nowrap}
+
+  /* ---------- CTA button ---------- */
+  .cta-wrap{display:flex;justify-content:center;margin:32px 0 6px}
+  .cta{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:#fff;background:var(--green);
+    font-weight:800;font-size:clamp(16px,2vw,19px);letter-spacing:.01em;
+    padding:16px 36px;border-radius:999px;box-shadow:0 14px 30px rgba(61,154,68,.35);
+    transition:transform .3s ease,background .3s ease,box-shadow .3s ease}
+  .cta:hover{background:#2e8a39;transform:translateY(-4px);box-shadow:0 20px 42px rgba(61,154,68,.45)}
+  .cta:active{transform:translateY(-1px)}
+  .cta .arr{display:inline-block;transition:transform .3s ease}
+  .cta:hover .arr{transform:translateX(5px)}
+
+  /* courses */
+  .course-link{display:inline-flex;align-items:center;gap:8px;margin-top:auto;text-decoration:none;
+    font-weight:800;font-size:14px;color:#fff;background:var(--green);border-radius:999px;padding:9px 18px;
+    transition:transform .25s ease,background .25s ease;width:max-content}
+  .course-link:hover{background:#2e8a39;transform:translateX(4px)}
+  .wip{border:2px dashed #cfcfcf;background:transparent;box-shadow:none}
+  .wip:hover{transform:translateY(-4px)}
+  .wip h3{color:#555}
+  .tag-wip{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);
+    background:rgba(242,169,59,.14);border-radius:999px;padding:4px 10px;width:max-content}
+  .tag-done{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--green);
+    background:var(--green-soft);border-radius:999px;padding:4px 10px;width:max-content}
+
+  /* footer */
+  footer{padding:80px 0 70px;text-align:center}
+  footer img{width:190px;mix-blend-mode:multiply;margin-bottom:6px}
+  footer h2{font-weight:800;text-transform:uppercase;font-size:clamp(26px,4vw,44px);line-height:1.05}
+  footer h2 .green{color:var(--green)}
+  footer p{color:var(--muted);font-weight:700;margin-top:10px}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease var(--d,0s),transform .7s ease var(--d,0s)}
+  .reveal.vis{opacity:1;transform:none}
+
+  /* ---------- tablet ---------- */
+  @media(max-width:960px){
+    .hero{padding-top:52px}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .g-open{grid-template-columns:repeat(2,1fr)}
+    .g-serv{grid-template-columns:repeat(2,1fr)}
+    .g-2{grid-template-columns:1fr}
+    .g-3{grid-template-columns:1fr}
+    .g-courses{grid-template-columns:repeat(2,1fr)}
+  }
+  /* ---------- mobile ---------- */
+  @media(max-width:620px){
+    .wrap{padding:0 16px}
+    .top-in{padding:12px 16px}
+    .hero{padding-top:40px}
+    .hero-emojis{font-size:34px;gap:14px}
+    .stats{gap:12px}
+    .stat{padding:16px 16px 14px}
+    .g-open,.g-serv,.g-courses{grid-template-columns:1fr}
+    .csi-note{text-align:left}
+    section{padding-top:48px}
+    .ribbon{height:48px}
+    footer{padding:60px 0 50px}
+    footer img{width:150px}
+  }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<header class="top">
+  <div class="top-in">
+    <span class="logo">🎓 Команда обучения <b>R&D</b></span>
+    <span class="top-note">итоговый рассказ</span>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<div class="wrap hero">
+  <h1>Чему учились <br><span class="green">в Q2 2026</span></h1>
+  <p class="hero-sub"> Команда обучения R&D собрала <b>небольшой сводный отчёт</b> о мероприятиях, клубах, курсах и проектах.</p>
+  <div class="hero-emojis" aria-hidden="true"><span>💚</span><span>🫰</span><span>🚀</span></div>
+</div>
+
+<!-- ============ STATS ============ -->
+<div class="wrap">
+  <div class="stats">
+    <div class="stat reveal"><span class="em">🎪</span><div class="num" data-to="99">0</div><div class="lbl">мероприятий</div></div>
+    <div class="stat reveal" style="--d:.08s"><span class="em">👥</span><div class="num" data-to="1115">0</div><div class="lbl">участников суммарно</div></div>
+    <div class="stat reveal" style="--d:.16s"><span class="em">💚</span><div class="num" data-to="9.7" data-dec="1">0</div><div class="lbl">средний CSI</div></div>
+    <div class="stat reveal" style="--d:.24s"><span class="em">📚</span><div class="num" data-to="3">0</div><div class="lbl">новых курса выпущено</div></div>
+  </div>
+  <p class="csi-note">CSI — индекс <b>удовлетворённости</b> участников по 10-балльной шкале.</p>
+</div>
+
+
+<!-- ============ 01 COURSES ============ -->
+<section id="courses">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-num">01</span><h2>Релизы и <span class="green">проекты</span></h2></div>
+    <p class="sec-lead reveal">Что можно пройти на портале, и что сейчас <b>в работе</b>.</p>
+    <div class="grid g-courses">
+      <div class="card reveal"><span class="tag-done">выпущен</span><span class="em">📘</span><h3>«API-Платформа»</h3><a class="course-link" href="https://edu.2gis.ru/catalog/content/info/203945" target="_blank" rel="noopener">Открыть курс →</a></div>
+      <div class="card reveal" style="--d:.06s"><span class="tag-done">выпущен</span><span class="em">📘</span><h3>«2ГИС ПРО»</h3><a class="course-link" href="https://edu.2gis.ru/catalog/content/info/212225" target="_blank" rel="noopener">Открыть курс →</a></div>
+      <div class="card reveal" style="--d:.12s"><span class="tag-done">выпущен</span><span class="em">📘</span><h3>«Введение в Jira Structure»</h3><a class="course-link" href="https://edu.2gis.ru/catalog/content/info/205040" target="_blank" rel="noopener">Открыть курс →</a></div>
+      <div class="card wip reveal"><span class="tag-wip">в работе</span><span class="em">🛠️</span><h3>Курс «Ситискан»</h3><p class="sub">скоро</p></div>
+      <div class="card wip reveal" style="--d:.06s"><span class="tag-wip">в работе</span><span class="em">🧭</span><h3>Треки развития: тимлида и саблида</h3><p class="sub">проектируем маршруты</p></div>
+      <div class="card wip reveal" style="--d:.12s"><span class="tag-wip">в работе</span><span class="em">✍️</span><h3>Трек развития фичекрайнего</h3><p class="sub">продолжаем развивать навыки</p></div>
+    </div>
+  </div>
+</section>
+
+<svg class="ribbon wrap" viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true">
+  <defs><linearGradient id="rg3" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#E2572B"/><stop offset=".35" stop-color="#F2A93B"/><stop offset=".7" stop-color="#7ED957"/><stop offset="1" stop-color="#3D9A44"/>
+  </linearGradient></defs>
+  <path d="M-20,70 C160,20 320,110 480,60 C640,15 800,25 940,75 C1060,115 1140,60 1220,35" fill="none" stroke="url(#rg3)" stroke-width="14" stroke-linecap="round"/>
+</svg>
+
+
+<!-- ============ 02 OPEN ============ -->
+<section id="open">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-num">02</span><h2>Открытые <span class="green">мероприятия</span></h2></div>
+    <p class="sec-lead reveal">Форматы, куда может прийти <b>любой сотрудник R&D</b>: мастерские и тренинги, где мы вместе разбираем важные для лидов темы — цели, результаты, мотивацию, обратную связь.</p>
+    <div class="grid g-open">
+      <div class="card reveal"><span class="em">🎯</span><h3>Мастерская «Как ставить цели на аттестации»</h3><div class="bar"><i style="--w:96%"></i></div><div class="pills"><span class="pill ppl">👥 8</span><span class="pill csi">CSI 9,6</span></div></div>
+      <div class="card reveal" style="--d:.05s"><span class="em">💎</span><h3>Мастерская «Определение и оценка ценности результата»</h3><div class="bar"><i style="--w:96%"></i></div><div class="pills"><span class="pill ppl">👥 4</span><span class="pill csi">CSI 9,6</span></div></div>
+      <div class="card reveal" style="--d:.1s"><span class="em">🗣️</span><h3>Мастерская «Разговор про результат»</h3><div class="bar"><i style="--w:98%"></i></div><div class="pills"><span class="pill ppl">👥 4</span><span class="pill csi">CSI 9,8</span></div></div>
+      <div class="card reveal" style="--d:.15s"><span class="em">🔥</span><h3>Мастерская «Разговор про мотивацию»</h3><div class="bar"><i style="--w:97%"></i></div><div class="pills"><span class="pill ppl">👥 4</span><span class="pill csi">CSI 9,7</span></div></div>
+      <div class="card reveal"><span class="em">💬</span><h3>Мастерская «Как давать мотивирующую и развивающую ОС»</h3><div class="bar"><i style="--w:100%"></i></div><div class="pills"><span class="pill ppl">👥 4</span><span class="pill csi">CSI 10</span></div></div>
+      <div class="card reveal" style="--d:.05s"><span class="em">🧗</span><h3>Мастерская «Сложные коммуникации»</h3><div class="bar"><i style="--w:100%"></i></div><div class="pills"><span class="pill ppl">👥 2</span><span class="pill csi">CSI 10</span></div></div>
+      <div class="card reveal" style="--d:.1s"><span class="em">🤝</span><h3>Мастерская «Встречи с сотрудником 1 на 1»</h3><div class="bar"><i style="--w:92%"></i></div><div class="pills"><span class="pill ppl">👥 3</span><span class="pill csi">CSI 9,2</span></div></div>
+      <div class="card reveal" style="--d:.15s"><span class="em">🎤</span><h3>Тренинг «Диалог с кандидатом: качественная работа с вопросами на встрече»</h3><div class="bar"><i style="--w:100%"></i></div><div class="pills"><span class="pill ppl">👥 2</span><span class="pill csi">CSI 10</span></div></div>
+    </div>
+    <div class="cta-wrap reveal">
+      <a class="cta" href="https://edu.2gis.ru/app/user-portal/trainings/catalog" target="_blank" rel="noopener">Записаться в Q3 <span class="arr">→</span></a>
+    </div>
+
+  </div>
+</section>
+
+<svg class="ribbon wrap" viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true">
+  <defs><linearGradient id="rg1" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#3D9A44"/><stop offset=".35" stop-color="#7ED957"/><stop offset=".6" stop-color="#F2A93B"/><stop offset=".8" stop-color="#E2572B"/><stop offset="1" stop-color="#7ED957"/>
+  </linearGradient></defs>
+  <path d="M-20,80 C120,20 260,110 420,70 C560,35 640,20 780,60 C900,95 1060,90 1220,40" fill="none" stroke="url(#rg1)" stroke-width="14" stroke-linecap="round"/>
+</svg>
+
+<!-- ============ 03 SERVICES ============ -->
+<section id="services">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-num">03</span><h2>Мероприятия <span class="green">под сервисы</span></h2></div>
+    <p class="sec-lead reveal">Работаем <b>под запрос конкретных команд</b>. Помогаем точечно развивать необходимые навыки и проводим командные сессии.</p>
+    <div class="grid g-serv">
+
+      <div class="card reveal"><div class="serv-head"><span class="em">🏨</span><h3>Otello</h3></div>
+        <div class="evt"><span class="evt-name">Сессия «Эволюция процессов Otello RnD»</span><div class="pills"><span class="pill ppl">👥 13</span><span class="pill csi">CSI 9,0</span></div><div class="bar"><i style="--w:90%"></i></div></div>
+      </div>
+
+      <div class="card reveal" style="--d:.05s"><div class="serv-head"><span class="em">📊</span><h3>Сервис аналитики</h3></div>
+        <div class="evt"><span class="evt-name">Мастерская «Как ставить цели на аттестации»</span><div class="pills"><span class="pill ppl">👥 3</span><span class="pill csi">CSI 9,2</span></div><div class="bar"><i style="--w:92%"></i></div></div>
+        <div class="evt"><span class="evt-name">Мастерская «Определение и оценка результата»</span><div class="pills"><span class="pill ppl">👥 2</span><span class="pill csi">CSI 8,8</span></div><div class="bar"><i style="--w:88%"></i></div></div>
+      </div>
+
+      <div class="card reveal" style="--d:.1s"><div class="serv-head"><span class="em">📢</span><h3>Сервис рекламы</h3></div>
+        <div class="evt"><span class="evt-name">Мастерская «Как давать мотивирующую и развивающую обратную связь»</span><div class="pills"><span class="pill ppl">👥 3</span><span class="pill csi">CSI 10</span></div><div class="bar"><i style="--w:100%"></i></div></div>
+      </div>
+
+      <div class="card reveal"><div class="serv-head"><span class="em">📱</span><h3>Mobile & Web</h3></div>
+        <div class="evt"><span class="evt-name">Мастерская «Аттестация: процесс и инструмент роста»</span><div class="pills"><span class="pill ppl">👥 15</span><span class="pill csi">CSI 9,1</span></div><div class="bar"><i style="--w:91%"></i></div></div>
+        <div class="evt"><span class="evt-name">Тренинг с сопровождением «Управление фокусом и перепиской»</span><div class="pills"><span class="pill ppl">👥 5</span><span class="pill csi">CSI 10</span></div><div class="bar"><i style="--w:100%"></i></div></div>
+        <div class="evt"><span class="evt-name">Тренинг «Принятие решений на основе фактов в наблюдении»</span><div class="pills"><span class="pill ppl">👥 10</span><span class="pill csi">CSI 9,8</span></div><div class="bar"><i style="--w:98%"></i></div></div>
+        <div class="evt"><span class="evt-name">Коммуникативная бизнес-игра «Диалоги с сотрудниками»</span><div class="pills"><span class="pill ppl">👥 9</span><span class="pill csi">CSI 9,8</span></div><div class="bar"><i style="--w:98%"></i></div></div>
+      </div>
+
+      <div class="card reveal" style="--d:.05s"><div class="serv-head"><span class="em">🎧</span><h3>Модерация и техподдержка</h3></div>
+        <div class="evt"><span class="evt-name">Вебинар-практикум «Как принимать изменения и становиться сильнее»</span><div class="pills"><span class="pill ppl">👥 36</span><span class="pill csi">CSI 9,9</span></div><div class="bar"><i style="--w:99%"></i></div></div>
+        <div class="evt"><span class="evt-name">Тренинг «Управление изменениями»</span><div class="pills"><span class="pill ppl">👥 10</span><span class="pill csi">CSI 10</span></div><div class="bar"><i style="--w:100%"></i></div></div>
+      </div>
+
+      <div class="card reveal" style="--d:.1s"><div class="serv-head"><span class="em">🗺️</span><h3>Сервис Карты</h3></div>
+        <div class="evt"><span class="evt-name">Практикум «Встречи 1 на 1»</span><div class="pills"><span class="pill ppl">👥 6</span><span class="pill csi">CSI 9,8</span></div><div class="bar"><i style="--w:98%"></i></div></div>
+      </div>
+
+      <div class="card reveal"><div class="serv-head"><span class="em">🚌</span><h3>Сервис транспорта</h3></div>
+        <div class="evt"><span class="evt-name">Пилот игры-симуляции «Делегирование задач»</span><div class="pills"><span class="pill ppl">👥 4</span><span class="pill csi na">CSI -</span></div><div class="bar"><i style="--w:0%"></i></div></div>
+        <div class="evt"><span class="evt-name">Мастерская «Как поговорить с сотрудником про ЗП»</span><div class="pills"><span class="pill ppl">👥 4</span><span class="pill csi">CSI 9,9</span></div><div class="bar"><i style="--w:99%"></i></div></div>
+        <div class="evt"><span class="evt-name">Тренинг-сессия по целеполаганию для ведущих инженеров</span><div class="pills"><span class="pill ppl">👥 7</span><span class="pill csi na">CSI -</span></div><div class="bar"><i style="--w:0%"></i></div></div>
+      </div>
+
+      <div class="card reveal" style="--d:.05s"><div class="serv-head"><span class="em">🚀</span><h3>Дата-инжиниринг</h3></div>
+        <div class="evt"><span class="evt-name">Сессия по формированию инициатив</span><div class="pills"><span class="pill ppl">👥 17</span><span class="pill csi">CSI 10</span></div><div class="bar"><i style="--w:100%"></i></div></div>
+      </div>
+
+      <div class="card reveal" style="--d:.1s"><div class="serv-head"><span class="em">🌐</span><h3>Сервис B2B</h3></div>
+        <div class="evt"><span class="evt-name">Тренинг «Принятие управленческих решений»</span><div class="pills"><span class="pill ppl">👥 7</span><span class="pill csi">CSI 9,5</span></div><div class="bar"><i style="--w:95%"></i></div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<svg class="ribbon wrap" viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true">
+  <defs><linearGradient id="rg2" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#7ED957"/><stop offset=".4" stop-color="#F2A93B"/><stop offset=".7" stop-color="#E2572B"/><stop offset="1" stop-color="#3D9A44"/>
+  </linearGradient></defs>
+  <path d="M-20,40 C140,100 300,10 460,60 C620,110 760,90 900,40 C1020,0 1120,60 1220,80" fill="none" stroke="url(#rg2)" stroke-width="14" stroke-linecap="round"/>
+</svg>
+
+<!-- ============ 04 CLUBS ============ -->
+<section id="clubs">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-num">04</span><h2>Клубы — <span class="green">встречи регулярно</span></h2></div>
+    <p class="sec-lead reveal">Сообщества, где лидеры и инженеры делятся опытом: <b>честные разговоры</b> про планирование, техдолг, ценности и устойчивость.</p>
+    <div class="grid g-2">
+      <div class="card reveal"><div class="serv-head"><span class="em">🧭</span><h3>Клуб RnD Leads</h3><span class="serv-badge">3 встречи</span></div>
+        <div class="evt"><span class="evt-name">Встреча 4 · «Планирование и обещания. Как оценить достаточность результата»</span><div class="pills"><span class="pill ppl">👥 22</span><span class="pill csi">CSI 9,6</span></div><div class="bar"><i style="--w:96%"></i></div></div>
+        <div class="evt"><span class="evt-name">Встреча 5 · «Как сделать так, чтобы техдолг гасился, а не откладывался в „вечно потом“»</span><div class="pills"><span class="pill ppl">👥 25</span><span class="pill csi">CSI 9,8</span></div><div class="bar"><i style="--w:98%"></i></div></div>
+        <div class="evt"><span class="evt-name">Встреча 6 · «Управление через ценности»</span><div class="pills"><span class="pill ppl">👥 20</span><span class="pill csi">CSI 9,9</span></div><div class="bar"><i style="--w:99%"></i></div></div>
+      </div>
+      <div class="card reveal" style="--d:.08s"><div class="serv-head"><span class="em">🖥️</span><h3>Клуб Core IT</h3><span class="serv-badge">3 встречи</span></div>
+        <div class="evt"><span class="evt-name">«Философия устойчивости» — о том, как сохранять опору в изменениях</span><div class="pills"><span class="pill ppl">👥 ~20</span><span class="pill csi">CSI 9,6</span></div><div class="bar"><i style="--w:96%"></i></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 FEATURE LEADERS ============ -->
+<section id="fw">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="sec-num">05</span><h2>Развитие <span class="green">фичекрайних</span></h2></div>
+    <p class="sec-lead reveal">Растим фичекрайних и тех, кто рядом: <b>запуски курса, встречи в сервисах и обучение наставников</b>.</p>
+    <div class="grid g-3">
+      <div class="card reveal"><span class="em">✍️</span><h3>Курс для фичекрайних — два потока</h3>
+        <div class="evt"><span class="evt-name">Поток апрель–май</span><div class="pills"><span class="pill ppl">👥 25</span><span class="pill csi">CSI 9,7</span></div><div class="bar"><i style="--w:97%"></i></div></div>
+        <div class="evt"><span class="evt-name">Поток май–июнь</span><div class="pills"><span class="pill ppl">👥 17</span><span class="pill csi">CSI 9,6</span></div><div class="bar"><i style="--w:95%"></i></div></div>
+      </div>
+      <div class="card reveal" style="--d:.08s"><span class="em">🤝</span><h3>Встречи для ГФК · Mobile&Web</h3>
+        <div class="evt"><span class="evt-name">Переговорный практикум</span><div class="pills"><span class="pill ppl">👥 10</span><span class="pill csi">CSI 9,7</span></div><div class="bar"><i style="--w:97%"></i></div></div>
+        <div class="evt"><span class="evt-name">Оценка опыта ГФК</span><div class="pills"><span class="pill ppl">👥 12</span><span class="pill csi">CSI 9,8</span></div><div class="bar"><i style="--w:98%"></i></div></div>
+      </div>
+      <div class="card reveal" style="--d:.16s"><span class="em">🌱</span><h3>Курс «Обучение тимлидов наставничеству фичекрайних»</h3>
+        <p class="sub">5 встреч · сервис Otello</p>
+        <div class="bar"><i style="--w:95%"></i></div>
+        <div class="pills"><span class="pill ppl">👥 4</span><span class="pill csi">CSI 9,5</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<svg class="ribbon wrap" viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true">
+  <defs><linearGradient id="rg3" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#E2572B"/><stop offset=".35" stop-color="#F2A93B"/><stop offset=".7" stop-color="#7ED957"/><stop offset="1" stop-color="#3D9A44"/>
+  </linearGradient></defs>
+  <path d="M-20,70 C160,20 320,110 480,60 C640,15 800,25 940,75 C1060,115 1140,60 1220,35" fill="none" stroke="url(#rg3)" stroke-width="14" stroke-linecap="round"/>
+</svg>
+
+
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <h2 class="reveal">Спасибо, что учитесь <span class="green">с нами!</span></h2>
+    <p class="reveal" style="--d:.1s">Команда обучения R&D · до встречи на новых мастерских, клубах и курсах 💚</p>
+  </div>
+</footer>
+
+<script>
+  // scroll progress
+  const prog = document.getElementById('progress');
+  addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const p = h.scrollTop / (h.scrollHeight - h.clientHeight) * 100;
+    prog.style.width = p + '%';
+  }, {passive:true});
+
+  // reveal on scroll
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('vis'); io.unobserve(e.target); }
+  }), {threshold:.15});
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // animated counters
+  const fmt = (v, d) => v.toFixed(d).replace('.', ',');
+  const cio = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target; cio.unobserve(el);
+    const to = parseFloat(el.dataset.to), dec = parseInt(el.dataset.dec || 0, 10);
+    const t0 = performance.now(), dur = 1500;
+    (function tick(t){
+      const p = Math.min(1, (t - t0) / dur);
+      const ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = fmt(to * ease, dec);
+      if (p < 1) requestAnimationFrame(tick);
+    })(t0);
+  }), {threshold:.5});
+  document.querySelectorAll('.num').forEach(el => cio.observe(el));
+</script>
+</body>
+</html>
